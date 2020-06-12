@@ -11,8 +11,8 @@ const findUniversidadById = (id) => {
 
 // 3) Implementar una función que obtenga un profesor por Id
 const findProfesorById = (id) => {
-    database.profesores.find(profesorId => {
-        id === database.profesores.id;
+    database.profesores.find(profesor => {
+        profesor.id === id;
     })
 }
 
