@@ -19,7 +19,7 @@ const findProfesorById = (id) => {
 // 4) Implementar una función que obtenga una materia por Id
 // 🤓 Tip: Comparar con la función del ejercicio (3) y ver si se les ocurre una función genérica que sirva para cualquier tabla
 
-export const getMateriaById= (materiaId) => {
+const getMateriaById= (materiaId) => {
     for (let i = 0; i < database.profesores; i++) {
         if (profesorId === database.profesores.id) {
             return database.profesores[i];
@@ -32,7 +32,23 @@ export const getMateriaById= (materiaId) => {
 
 // 5) Crear un objeto 'helpers' que contenga las funciones como métodos
 let helpers = {
-    
+    findUniversidadById: (id) => {
+        database.universidades.find(value => {
+            value.id === id;
+        })
+    },
+    findProfesorById: (id) => {
+        database.profesores.find(profesorId => {
+            id === database.profesores.id;
+        })
+    },
+    findMateriaById: (materiaId) => {
+        for (let i = 0; i < database.profesores; i++) {
+            if (profesorId === database.profesores.id) {
+                return database.profesores[i];
+            }
+        }
+    },
 }
 // 6) Mover helpers y el todo el co´digo a un módulo, creando un nuevo archivo helpers.js
 
