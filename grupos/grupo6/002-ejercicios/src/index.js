@@ -3,18 +3,15 @@ import { database } from './basededatos';
 
 // 2) Implementar una función que obtenga una universidad por Id
 // 🤓 Tip: pueden ir probando las funciones usando console.log() asegurándose que los resultados sean los esperados
-const findUniversidadById = (id) => {
-    database.universidades.find(value => {
-        value.id === id;
-    })
-}
+const findUniversidadById = (id) => 
+    database.universidades.find(value => 
+        value.id === id)
+
 
 // 3) Implementar una función que obtenga un profesor por Id
-const findProfesorById = (id) => {
-    database.profesores.find(profesor => {
-        profesor.id === id;
-    })
-}
+const findProfesorById = (id) => 
+    database.profesores.find(profesor => 
+        profesor.id === id)
 
 // 4) Implementar una función que obtenga una materia por Id
 // 🤓 Tip: Comparar con la función del ejercicio (3) y ver si se les ocurre una función genérica que sirva para cualquier tabla
@@ -32,23 +29,14 @@ const getMateriaById= (materiaId) => {
 
 // 5) Crear un objeto 'helpers' que contenga las funciones como métodos
 let helpers = {
-    findUniversidadById: (id) => {
-        database.universidades.find(value => {
-            value.id === id;
-        })
-    },
-    findProfesorById: (id) => {
-        database.profesores.find(profesorId => {
-            id === database.profesores.id;
-        })
-    },
-    findMateriaById: (materiaId) => {
-        for (let i = 0; i < database.profesores; i++) {
-            if (profesorId === database.profesores.id) {
-                return database.profesores[i];
-            }
-        }
-    },
+    findUniversidadById: (id) => 
+        database.universidades.find(value => 
+            value.id === id)
+    ,
+    findProfesorById: (id) => 
+        database.profesores.find(profesor => 
+            profesor.id === id)
+    ,
 }
 // 6) Mover helpers y el todo el co´digo a un módulo, creando un nuevo archivo helpers.js
 
