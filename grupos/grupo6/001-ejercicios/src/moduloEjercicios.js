@@ -200,9 +200,14 @@ const findMateriasWithSameIdAsIndicatedByCalificaciones = (materias, calificacio
 // /**
 //  * Devuelve el promedio de edad de los alumnos.
 //  */
-// export const promedioDeEdad = () => {
-//   return [];
-// };
+export const promedioDeEdad = () => {
+  let cantidadAlumnos = basededatos.alumnos.length;
+  let promedio = 0;
+  for (let i = 0; i < cantidadAlumnos; i++) {
+    promedio += basededatos['alumnos'][i].edad;
+  }
+  return promedio / cantidadAlumnos;
+};
 
 // /**
 //  * Devuelve la lista de alumnos con promedio mayor al numero pasado
