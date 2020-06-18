@@ -218,12 +218,36 @@ export const promedioDeEdad = () => {
 //   return [];
 // };
 
-// /**
-//  * Devuelve la lista de materias sin alumnos
-//  */
-// export const materiasSinAlumnosAnotados = () => {
-//   return [];
-// };
+ /**
+  * Devuelve la lista de materias sin alumnos
+  */
+ export const materiasSinAlumnosAnotados = () => {
+  // si pido la longitud de materia se la cantidad que hay
+  // entonces tengo que descartar las que sean iguales a las de calificaciones
+  // uso doble for porque la materias puede ser == a calificacion en cualquier parte
+  // pero es ineficiente para muchos valores de calificaciones 
+  let resultado = [];
+  let numMateria = 1;
+  let flag = [];
+for(let i = 0; i < basededatos.materias.length; i++){
+  let j = 0;
+  while( j < basededatos.calificaciones.length){
+    if(basededatos.materias[i].id == basededatos.calificaciones[j].materia){
+      flag[i] = true; 
+      break;
+    }else{
+      j++;
+      flag[i] = false;
+    }
+  }
+  }
+  for(let f = 0; f < flag.length; f++){
+    if(!flag[f]){
+      resultado.push(basededatos.materias[f]);
+    }
+  }
+return resultado;
+};
 
 // /**
 //  * Devuelve el promdedio de edad segun el id de la universidad.
