@@ -1,5 +1,5 @@
-import {Collection} from './1.collection'
-
+import { Collection } from './1.collection';
+import { Vector } from './2.vector';
 
 const prueba = new Collection([1,2,3]);
 
@@ -17,3 +17,7 @@ prueba.delete(3);
 
 console.log(`La collection contiene al 3? ${prueba.has(3)}`);
 
+let vector1 = new Vector(1,2);
+let vector2 = new Vector(3,4);
+
+console.log(vector1.sumar(vector2));
