@@ -1,6 +1,8 @@
 import {
   materiasAprobadasByNombreAlumno,
   expandirInfoUniversidadByNombre,
+  promedioDeEdad,
+  materiasSinAlumnosAnotados
 } from './moduloEjercicios';
 
 import baseDeDatos from './basededatos';
@@ -32,3 +34,9 @@ const infoUniversidadRio = expandirInfoUniversidadByNombre(
   'Universidad de Rio Negro'
 );
 console.log('Info rio negro:', infoUniversidadRio);
+
+const promedioAlumnos = promedioDeEdad();
+console.log("Promedio de edad de los alumnos: ",promedioAlumnos);
+
+const materias = materiasSinAlumnosAnotados();
+console.log("Materias sin alumnos ", materias);
