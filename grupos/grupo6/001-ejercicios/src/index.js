@@ -2,10 +2,9 @@ import {
   materiasAprobadasByNombreAlumno,
   expandirInfoUniversidadByNombre,
   promedioDeEdad,
-  materiasSinAlumnosAnotados
+  materiasSinAlumnosAnotados,
+  alumnosConPromedioMayorA,
 } from './moduloEjercicios';
-
-import baseDeDatos from './basededatos';
 
 // materiasAprobadasByNombreAlumno
 console.log('------------------------------------------------------');
@@ -35,8 +34,20 @@ const infoUniversidadRio = expandirInfoUniversidadByNombre(
 );
 console.log('Info rio negro:', infoUniversidadRio);
 
+// promedioDeEdad
+console.log('------------------------------------------------------');
+console.log('Ejecutando ejercicio promedioDeEdad.');
 const promedioAlumnos = promedioDeEdad();
-console.log("Promedio de edad de los alumnos: ",promedioAlumnos);
+console.log('Promedio de edad de los alumnos: ', promedioAlumnos);
 
+// alumnosConPromedioMayorA
+console.log('------------------------------------------------------');
+console.log('Ejecutando ejercicio alumnosConPromedioMayorA.');
+const mayorACinco = alumnosConPromedioMayorA(5);
+console.log('Alumnos con promedio mayor a 5: ', mayorACinco);
+
+// materiasSinAlumnosAnotados
+console.log('------------------------------------------------------');
+console.log('Ejecutando ejercicio materiasSinAlumnosAnotados.');
 const materias = materiasSinAlumnosAnotados();
-console.log("Materias sin alumnos ", materias);
+console.log('Materias sin alumnos ', materias);

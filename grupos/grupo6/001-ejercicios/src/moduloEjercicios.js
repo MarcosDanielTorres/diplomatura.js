@@ -21,19 +21,50 @@ import basededatos from './basededatos';
   ]
  * @param {nombreAlumno} nombreAlumno
  */
-
-
-
 export const materiasAprobadasByNombreAlumno = (nombreAlumno) => {
-  let alumno = findAlumnoByName(nombreAlumno)
-  if(!alumno) throw new Error("No se encontro el nombre especificado en la base de datos.")
+  // Ejemplo de como accedo a datos dentro de la base de datos
+  //console.log("Resultado ", basededatos.alumnos);
+  let alumnoId;
+  let found = false;
+  let i = 0;
 
-  let idAlumno = findAlumnoByName(nombreAlumno).id
+  while (!found && i < basededatos.alumnos.length) {
+    if (nombreAlumno === basededatos.alumnos[i].nombre) {
+      alumnoId = basededatos.alumnos[i].id;
+      found = true;
+    }
+    i++;
+  }
 
-  let calificaciones = basededatos.calificaciones.filter(findCalificacionWithNotaGreaterThan(idAlumno, 4))
-  
-  return findMateriasWithSameIdAsIndicatedByCalificaciones(basededatos.materias, calificaciones)
+  if (!found) {
+    return undefined;
+  }
 
+  const materiasidAprobadasByAlumnoid = [];
+
+  for (let i = 0; i < basededatos.calificaciones.length; i++) {
+    if (
+      basededatos.calificaciones[i].alumno === alumnoId &&
+      basededatos.calificaciones[i].nota >= 4
+    ) {
+      materiasidAprobadasByAlumnoid.push(basededatos.calificaciones[i].materia);
+    }
+  }
+
+  const materiasAprobadasByNombreAlumno = [];
+  for (let i = 0; i < materiasidAprobadasByAlumnoid.length; i++) {
+    let j = 0;
+    let found = false;
+    while (!found) {
+      if (basededatos.materias[j].id == materiasidAprobadasByAlumnoid[i]) {
+        materiasAprobadasByNombreAlumno.push(basededatos.materias[j]);
+        found = true;
+      }
+      j++;
+    }
+  }
+
+  return materiasAprobadasByNombreAlumno;
 };
 
 /**
@@ -78,130 +109,168 @@ export const materiasAprobadasByNombreAlumno = (nombreAlumno) => {
  * @param {string} nombreUniversidad
  */
 export const expandirInfoUniversidadByNombre = (nombreUniversidad) => {
-  return []
-  const cant_universidades = basededatos["universidades"].length
-  let id_universidad = -1
   let universidad;
 
-  for(let i = 0; i < cant_universidades; i++){
-    if(basededatos["universidades"][i].nombre === nombreUniversidad){
-        id_universidad = basededatos["universidades"][i].id
-        universidad = basededatos["universidades"][i]
-        break;
+  let i = 0;
+  let found = false;
+
+  while (!found && i < basededatos.universidades.length) {
+    if (nombreUniversidad === basededatos.universidades[i].nombre) {
+      universidad = basededatos.universidades[i];
+      found = true;
+    }
+    i++;
+  }
+
+  let materias = [];
+  for (let i = 0; i < basededatos.materias.length; i++) {
+    if (universidad.id === basededatos.materias[i].universidad) {
+      materias.push(basededatos.materias[i]);
     }
   }
 
+  let profesores = [];
+  for (let i = 0; i < basededatos.profesores.length; i++) {
+    for (let j = 0; j < materias.length; j++) {
+      for (let k = 0; k < materias[j].profesores.length; k++) {
+        if (materias[j].profesores[k] === basededatos.profesores[i].id) {
+          let l = 0;
+          let found = false;
+          while (!found && l < profesores.length) {
+            if (profesores[l].id === basededatos.profesores[i].id) {
+              found = true;
+            }
+            l++;
+          }
 
-  //busca las materias asociadas a la universidad
-  const cant_materias = basededatos["materias"].length
-  let materiasDeUniversidad = []
-  let profesores = []
-
-  for(let i = 0; i < cant_materias; i++){
-    if(basededatos["materias"][i].universidad === id_universidad){
-      materiasDeUniversidad.push(basededatos["materias"][i])
-      let db_Profesores = basededatos["materias"][i].profesores;
-      let cantProfesores = db_Profesores.length
-     
-      for(let k = 0; k < cantProfesores; k++){
-        profesores.push(db_Profesores[k]) // estoy guardando los ids en esta lista
-      }
-    }
-  }
-  
-  
-  let profesoresRetorno = []
-  for(let i = 0; i < profesores.length; i++){
-    for(let j = 0; j < basededatos["profesores"].length; j++){
-      if(basededatos["profesores"][j].id === profesores[i]){
-        profesoresRetorno.push(basededatos["profesores"][j])
-      }
-    }
-  }
-
-  
-  // materiasUniverisdad = id de las materias
-  
-  let idalumnos = []
-
-  for(let i = 0; i < materiasDeUniversidad.length; i++){
-    for(let j = 0; j < basededatos["calificaciones"].length; j++){
-      if(materiasDeUniversidad[i].id === basededatos["calificaciones"][j].alumno){
-        idalumnos.push(basededatos["calificaciones"][j].alumno)
-        break;
+          if (!found) {
+            profesores.push(basededatos.profesores[i]);
+          }
+        }
       }
     }
   }
 
   let alumnos = [];
+  for (let i = 0; i < basededatos.calificaciones.length; i++) {
+    for (let j = 0; j < materias.length; j++) {
+      if (materias[j].id === basededatos.calificaciones[i].materia) {
+        for (let k = 0; k < basededatos.alumnos.length; k++) {
+          if (
+            basededatos.alumnos[k].id === basededatos.calificaciones[i].alumno
+          ) {
+            let l = 0;
+            let found = false;
+            while (!found && l < alumnos.length) {
+              if (alumnos[l].id === basededatos.alumnos[k].id) {
+                found = true;
+              }
+              l++;
+            }
 
-for(let i = 0; i < basededatos["alumnos"].length; i++){
-  for(let j = 0; j < idalumnos.length; j++){
-    if(basededatos["alumnos"][i].id === idalumnos[j]){
-      alumnos.push(basededatos["alumnos"][i])
+            if (!found) {
+              alumnos.push(basededatos.alumnos[k]);
+            }
+          }
+        }
+      }
     }
   }
-}
-  //busca los profesores de esas materias
-  return {
-    id: universidad.id,
-    nombre: universidad.nombre,
-    direccion: universidad.direccion,
-    materias: materiasDeUniversidad,
-    profesores: profesoresRetorno,
-    alumnos: alumnos
-  };
+
+  const resultado = {};
+
+  resultado.universidad = universidad;
+  resultado.materias = materias;
+  resultado.profesores = profesores;
+  resultado.alumnos = alumnos;
+
+  return resultado;
 };
-
-
 
 /**
  * Dado un nombre se busca el alumno en la base de datos y se devuelve.
- * @param{string} name - Nombre del alumno a buscar.
- * @returns{databasededatos.alumnos} alumno - El alumno buscado.
+ *
+ * @param {string} name - Nombre del alumno a buscar.
+ * @returns {string} alumno - El alumno buscado.
  */
 const findAlumnoByName = (name) =>
-  basededatos.alumnos.find((value) =>
-     value.nombre === name)
+  basededatos.alumnos.find((value) => value.nombre === name);
 
+/**
+ * Devuelve la lista de alumnos con promedio mayor al numero pasado
+ * por parametro.
+ * @param {number} promedio
+ */
+export const alumnosConPromedioMayorA = (promedio) => {
+  const notasAlumnos = [];
 
-     
-/* mismo resultado que findCalificacionWithNotaGreaterThan*/
+  // Construimos lista de objetos alumno - notas - promedio
+  for (let i = 0; i < basededatos.calificaciones.length; i++) {
+    let j = 0;
+    let found = false;
 
-  const testFunction = (id, nota) => {
-  return basededatos.calificaciones.find((value) =>{
-    return value.alumno === id && value.nota >= nota
-  })
-}
-
-const findCalificacionWithNotaGreaterThan = (id, nota) =>{
-  return (value) => {
-    return value.alumno === id && value.nota >= nota;
-  }
-}
-
-const findMateriasWithSameIdAsIndicatedByCalificaciones = (materias, calificaciones) => {
-  let res = []
-  materias.forEach((materia) => {
-    return calificaciones.forEach((calificacion) => {
-      if(calificacion.materia === materia.id){
-        res.push(materia)
+    while (!found && j < notasAlumnos.length) {
+      if (basededatos.calificaciones[i].alumno === notasAlumnos[j].alumno) {
+        found = true;
+      } else {
+        j++;
       }
-    })
-  })
-  return res;
+    }
+
+    if (!found) {
+      const alumnoPromedio = {};
+
+      alumnoPromedio.alumno = basededatos.calificaciones[i].alumno;
+      alumnoPromedio.notas = [];
+      alumnoPromedio.promedio = 0;
+
+      // Ingreso primer nota encontrada
+      alumnoPromedio.notas.push(basededatos.calificaciones[i].nota);
+
+      notasAlumnos.push(alumnoPromedio);
+    } else {
+      notasAlumnos[j].notas.push(basededatos.calificaciones[i].nota);
+    }
   }
 
-     
+  // Para cada alumno calculamos su promedio
+  for (let i = 0; i < notasAlumnos.length; i++) {
+    let suma = 0;
 
+    for (let j = 0; j < notasAlumnos[i].notas.length; j++) {
+      suma += notasAlumnos[i].notas[j];
+    }
 
+    notasAlumnos[i].promedio = suma / notasAlumnos[i].notas.length;
+  }
 
+  // Listado de alumnos con el promedio solicitado
+  const resultado = [];
 
-// /**
-//  * Devuelve el promedio de edad de los alumnos.
-//  */
+  // Filtramos alumnos que no tengan el promedio pedido
+  const mayorPromedio = (obj) => obj.promedio > promedio;
+  const nuevo = notasAlumnos.filter(mayorPromedio);
+
+  // Buscamos en la BD los objetos alumno
+  if (nuevo.length > 0) {
+    for (let i = 0; i < nuevo.length; i++) {
+      for (let j = 0; j < basededatos.alumnos.length; j++) {
+        if (basededatos.alumnos[j].id === nuevo[i].alumno) {
+          resultado.push(basededatos.alumnos[j]);
+        }
+      }
+    }
+  }
+
+  return resultado;
+};
+
+/**
+ * Devuelve el promedio de edad de los alumnos.
+ * @returns {number} promedio de edades
+ */
 export const promedioDeEdad = () => {
-  let cantidadAlumnos = basededatos.alumnos.length;
+  const cantidadAlumnos = basededatos.alumnos.length;
   let promedio = 0;
   for (let i = 0; i < cantidadAlumnos; i++) {
     promedio += basededatos['alumnos'][i].edad;
@@ -209,110 +278,33 @@ export const promedioDeEdad = () => {
   return promedio / cantidadAlumnos;
 };
 
-// /**
-//  * Devuelve la lista de alumnos con promedio mayor al numero pasado
-//  * por parametro.
-//  * @param {number} promedio
-//  */
-// export const alumnosConPromedioMayorA = (promedio) => {
-//   return [];
-// };
-
- /**
-  * Devuelve la lista de materias sin alumnos
-  */
- export const materiasSinAlumnosAnotados = () => {
+/**
+ * Devuelve la lista de materias sin alumnos
+ */
+export const materiasSinAlumnosAnotados = () => {
   // si pido la longitud de materia se la cantidad que hay
   // entonces tengo que descartar las que sean iguales a las de calificaciones
   // uso doble for porque la materias puede ser == a calificacion en cualquier parte
-  // pero es ineficiente para muchos valores de calificaciones 
+  // pero es ineficiente para muchos valores de calificaciones
   let resultado = [];
   let numMateria = 1;
   let flag = [];
-for(let i = 0; i < basededatos.materias.length; i++){
-  let j = 0;
-  while( j < basededatos.calificaciones.length){
-    if(basededatos.materias[i].id == basededatos.calificaciones[j].materia){
-      flag[i] = true; 
-      break;
-    }else{
-      j++;
-      flag[i] = false;
-    }
-  }
-  }
-  for(let f = 0; f < flag.length; f++){
-    if(!flag[f]){
-      resultado.push(basededatos.materias[f]);
-    }
-  }
-return resultado;
-};
-
-// /**
-//  * Devuelve el promdedio de edad segun el id de la universidad.
-//  * @param {number} universidadId
-//  */
-// export const promedioDeEdadByUniversidadId = (universidadId) => {
-//   return [];
-// };
-
-
-
-
-
-
-
-/*
-
-OLD VERSION
-
-export const materiasAprobadasByNombreAlumno = (nombreAlumno) => {
-  // Ejemplo de como accedo a datos dentro de la base de datos
-   //const idAlumno = basededatos[]
-
-  // const cantidadAlumnos = basededatos["alumnos"].length
-  // let idAlumno = -1;
-  // for(let i = 0; i < cantidadAlumnos; i++){
-  //   if(basededatos["alumnos"][i].nombre === nombreAlumno){
-  //       idAlumno = basededatos["alumnos"][i].id;
-  //     break;
-  //   }
-  // }
-  let alumno = findAlumnoByName(nombreAlumno)
-  if(!alumno) throw new Error("No se encontro el nombre especificado en la base de datos.")
-
-  let idAlumno = findAlumnoByName(nombreAlumno).id
-  let materiasAprobadasPorAlumno = []
-
-
-  let test = basededatos.calificaciones.filter(findCalificacionWithNotaGreaterThan(idAlumno, 4))
-  
-  // Obtener materias del alumno si la calificacion fue mayor o igual a nota
-  const cant_calificaciones = basededatos["calificaciones"].length
-  for(let i = 0; i < cant_calificaciones; i++){
-    if(basededatos["calificaciones"][i].alumno === idAlumno && basededatos["calificaciones"][i].nota >= 4){
-      materiasAprobadasPorAlumno.push(basededatos["calificaciones"][i].materia)
-    }
-  }
-
-  let test2 = findMateriasWithSameIdAsIndicatedByCalificaciones(basededatos.materias, test)
-
-  //
-  console.log("CALIFICACIONES: ", test)
-  const cant_materias = basededatos["materias"].length
-  let nombreMateriasAprobadas = []
-
-  for(let i = 0; i < cant_materias; i++){
-    for(let j = 0; j < materiasAprobadasPorAlumno.length; j++){
-      if(basededatos["materias"][i].id == materiasAprobadasPorAlumno[j]){
-        nombreMateriasAprobadas.push(basededatos["materias"][i])
+  for (let i = 0; i < basededatos.materias.length; i++) {
+    let j = 0;
+    while (j < basededatos.calificaciones.length) {
+      if (basededatos.materias[i].id == basededatos.calificaciones[j].materia) {
+        flag[i] = true;
         break;
+      } else {
+        j++;
+        flag[i] = false;
       }
     }
   }
-
-
-  
-  return test2;
-};*/
+  for (let f = 0; f < flag.length; f++) {
+    if (!flag[f]) {
+      resultado.push(basededatos.materias[f]);
+    }
+  }
+  return resultado;
+};
