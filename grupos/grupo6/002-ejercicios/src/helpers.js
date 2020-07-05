@@ -17,6 +17,17 @@ import { database } from './basededatos';
 export const helpers = {
   findById: (tabla, id) => database[tabla].find((value) => value.id === id),
   findLastId: (tabla) => Math.max(...database[tabla].map((p) => p.id)),
+  materiaMasProfUni: (id) => {
+    const m = database.materias.find((f) => f.id === id);
+    const u = database.universidades.find((u) => u.id === m.universidad);
+        return {
+        nombre: m.nombre,
+        universidad: u ? u.id: '',
+        profesores: m.profesores.map(
+        (p) => database.profesores.find((s) => s.id === p).nombre
+        ),
+    };
+}
 };
 
 
