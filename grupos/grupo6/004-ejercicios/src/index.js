@@ -6,16 +6,21 @@ import moment from 'moment';
 import os from 'os';
 
 const PORT = 8080;
+const FORMATE_DATE = 'MMMM Do YYYY h:mm:ss a'
+moment.locale('es');
+let serverStartUpTime;
 
 app.use('/posts', postsRoutes);
 app.use('/albums', albumRoutes);
+app.use('/users', usersApi);
 
 // Implementar el endpoint de stats aca. GET "/"
 app.get('/', function (req, res) {
+  const now = new Date().getTime();
   const resultado = {
-    serverCurrentTime: moment().format('MMMM Do YYYY, h:mm:ss a'),
-    serverStartUpTime: moment().startOf('minutes').fromNow(),
-    serverUpTime: moment("20200703", "YYYYMMDD").fromNow(),
+    serverCurrentTime: moment().format(FORMATE_DATE),
+    serverStartUpTime: serverStartUpTime.format(FORMATE_DATE),
+    serverUpTime: serverStartUpTime.startOf('minutes').fromNow(),
 
     status: {
       freemem: os.freemem(),
@@ -28,6 +33,8 @@ app.get('/', function (req, res) {
   res.send(resultado);
 });
 
-app.listen(PORT);
-console.log(`Express started on port ${PORT}`);
+app.listen(PORT, ()=>{
+  console.log(`Express started on port ${PORT}`);
+  serverStartUpTime = moment();
+});
 
