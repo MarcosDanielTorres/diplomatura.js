@@ -1,6 +1,7 @@
 import express from 'express';
 const app = express();
 import postsRoutes from './controllers/posts';
+import usersApi from './controllers/users';
 import albumRoutes from './controllers/albums';
 import moment from 'moment';
 import os from 'os';
