@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+
 import mongo from 'mongodb';
 import {ObjectId} from 'mongodb';
 
@@ -16,11 +17,11 @@ router.get('/', function (req, res) {
     const collection = client.db(dbName).collection("alumnos");
     try{
       const result = await collection.find({}).toArray();
-      client.close();
       res.send(result);
     }catch(e){
-    client.close();
       res.status(500).send();
+    }finally{
+      client.close();
     }
   });
 });
@@ -36,11 +37,11 @@ router.get('/:id', function (req, res) {
       if(!alumno)
         throw new Error();
 
-      client.close();
       res.send(alumno);
     }catch(e){
-      client.close();
       res.status(500).send();
+    }finally{
+      client.close();
     }
   });
 });
@@ -59,7 +60,7 @@ router.post('/', function (req, res) {
     }catch(e){
       res.status(500).send();
     }
-    res.status(200).send();
+    res.status(200).send({ok: true});
     client.close();
   });
 });
@@ -80,7 +81,7 @@ router.put('/:id', (req, res) =>{
     if(!isValidOperation) return res.status(400).send({error: 'Invalid key name'})
 
     try{
-      const alumno = await collection.findOne({"_id": new ObjectId(req.params.id)},
+      const alumno = await collection.findOneAndUpdate({"_id": new ObjectId(req.params.id)},
       {
         $set:
           {
@@ -93,11 +94,11 @@ router.put('/:id', (req, res) =>{
       if(!alumno)
         throw new Error();
         
-      client.close();
       res.send(alumno);
     }catch(e){
-      client.close();
       res.status(500).send();
+    }finally{
+      client.close();
     }
   });
 
