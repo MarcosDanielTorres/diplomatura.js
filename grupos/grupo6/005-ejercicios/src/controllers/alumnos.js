@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 
 const MongoClient = mongo.MongoClient;
 
-const url = 'mongodb://localhost:27017/universidades';
+const url = 'mongodb://127.0.0.1:27017/universidades';
 const dbName = 'universidades';
 
 router.get('/', function (req, res) {
