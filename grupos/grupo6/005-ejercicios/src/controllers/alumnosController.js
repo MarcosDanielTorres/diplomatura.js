@@ -33,17 +33,20 @@ const createAlumno = (req, res) => {
 
   client.connect(async (err) => {
     const collection = client.db(dbName).collection('alumnos');
+    const { nombre, edad, provincia } = req.body;
     try {
-      await collection.insertOne({
-        nombre: req.body.nombre,
-        edad: req.body.edad,
-        provincia: req.body.provincia,
+      const resultadoOperacion = await collection.insertOne({
+        nombre,
+        edad,
+        provincia,
       });
+
+      res.status(200).send(resultadoOperacion.ops);
     } catch (e) {
       res.status(500).send();
+    } finally {
+      client.close();
     }
-    res.status(200).send({ ok: true });
-    client.close();
   });
 };
 
@@ -128,8 +131,9 @@ const deleteById = (req, res) => {
       res.json({ ok: true });
     } catch (e) {
       res.status(500).send();
+    } finally {
+      client.close();
     }
-    client.close();
   });
 };
 
