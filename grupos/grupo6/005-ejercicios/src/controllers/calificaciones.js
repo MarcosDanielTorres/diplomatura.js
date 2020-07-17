@@ -86,7 +86,7 @@ router.put('/:id', (req, res) =>{
           {
             "nombre": req.body.nombre,
             "edad": req.body.edad,
-            "provincia": req.body.provincia,
+            "provincia": req.body.provincia
           }
       });
 
