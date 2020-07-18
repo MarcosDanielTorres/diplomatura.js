@@ -1,140 +1,121 @@
 import express from 'express';
-const router = express.Router();
-
+import * as helpers from '../helpers';
 import mongo from 'mongodb';
 import { ObjectId } from 'mongodb';
+
+const profesores = express.Router();
 
 const MongoClient = mongo.MongoClient;
 
 const url = 'mongodb://localhost:27017/universidades';
 const dbName = 'universidades';
 
-router.get('/', function (req, res) {
-  const client = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+
+helpers.GET(profesores, "profesores");
+
+profesores.get('/:id', function (req, res) {
+    const client = new MongoClient(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  
+    client.connect(async (err) => {
+      const collection = client.db(dbName).collection("profesores");
+      try {
+        const profesor = await collection.findOne({
+          _id: new ObjectId(req.params.id),
+        });
+  
+        if (!profesor) throw new Error();
+  
+        res.send(profesor);
+      } catch (e) {
+        res.status(500).send();
+      } finally {
+        client.close();
+      }
+    });
   });
 
-  client.connect(async (err) => {
-    const collection = client.db(dbName).collection('alumnos');
-    try {
-      const result = await collection.find({}).toArray();
-      res.send(result);
-    } catch (e) {
-      res.status(500).send();
-    } finally {
+  profesores.post('/', function (req, res) {
+    const client = new MongoClient(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  
+    client.connect(async (err) => {
+      const collection = client.db(dbName).collection('profesores');
+      try {
+        await collection.insertOne({
+          id: req.body.id,
+          nombre: req.body.nombre,
+        });
+      } catch (e) {
+        res.status(500).send();
+      }
+      res.status(200).send({ ok: true });
       client.close();
-    }
-  });
-});
-
-router.get('/:id', function (req, res) {
-  const client = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    });
   });
 
-  client.connect(async (err) => {
-    const collection = client.db(dbName).collection('alumnos');
-    try {
-      const alumno = await collection.findOne({
-        _id: new ObjectId(req.params.id),
-      });
+  profesores.put('/:id', (req, res) => {
 
-      if (!alumno) throw new Error();
-
-      res.send(alumno);
-    } catch (e) {
-      res.status(500).send();
-    } finally {
-      client.close();
-    }
-  });
-});
-
-router.post('/', function (req, res) {
-  const client = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  client.connect(async (err) => {
-    const collection = client.db(dbName).collection('alumnos');
-    try {
-      await collection.insertOne({
-        nombre: req.body.nombre,
-        edad: req.body.edad,
-        provincia: req.body.provincia,
-      });
-    } catch (e) {
-      res.status(500).send();
-    }
-    res.status(200).send({ ok: true });
-    client.close();
-  });
-});
-
-router.put('/:id', (req, res) => {
-  // Mejorar esta ruta, resulta que si se elije no updatear algun valor le queda nulo en vez de conservar el anterior.
-  // Para que esto funcione deben updatearse todos los atributos del "modelo".
-
-  const client = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  client.connect(async (err) => {
-    const collection = client.db(dbName).collection('alumnos');
-
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['nombre', 'edad', 'provincia'];
-
-
-    const isValidOperation = updates.every((update) =>
-      allowedUpdates.includes(update)
-    );
-    if (!isValidOperation)
-      return res.status(400).send({ error: 'Invalid key name' });
-
-    try {
-      const alumno = await collection.findOneAndUpdate(
-        { _id: new ObjectId(req.params.id) },
-        {
-          $set: {
-            nombre: req.body.nombre,
-            edad: req.body.edad,
-            provincia: req.body.provincia,
-          },
-        }
+    const client = new MongoClient(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  
+    client.connect(async (err) => {
+      const collection = client.db(dbName).collection('profesores');
+  
+      const updates = Object.keys(req.body);
+      const allowedUpdates = ['id', 'nombre'];
+  
+  
+      const isValidOperation = updates.every((update) =>
+        allowedUpdates.includes(update)
       );
-
-      if (!alumno) throw new Error();
-
-      res.send(alumno);
-    } catch (e) {
-      res.status(500).send();
-    } finally {
+      if (!isValidOperation)
+        return res.status(400).send({ error: 'Invalid key name' });
+  
+      try {
+        const profesor = await collection.findOneAndUpdate(
+          { _id: new ObjectId(req.params.id) },
+          {
+            $set: {
+              id: req.body.id,
+              nombre: req.body.nombre,
+            },
+          }
+        );
+  
+        if (!profesor) throw new Error();
+  
+        res.send(profesor);
+      } catch (e) {
+        res.status(500).send();
+      } finally {
+        client.close();
+      }
+    });
+  });
+  
+  profesores.delete('/:id', (req, res) => {
+    const client = new MongoClient(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  
+    client.connect(async (err) => {
+      const collection = client.db(dbName).collection('profesores');
+      try {
+        await collection.deleteOne({ _id: new ObjectId(req.params.id) });
+        res.json({ ok: true });
+      } catch (e) {
+        res.status(500).send();
+      }
       client.close();
-    }
-  });
-});
-
-router.delete('/:id', (req, res) => {
-  const client = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    });
   });
 
-  client.connect(async (err) => {
-    const collection = client.db(dbName).collection('alumnos');
-    try {
-      await collection.deleteOne({ _id: new ObjectId(req.params.id) });
-      res.json({ ok: true });
-    } catch (e) {
-      res.status(500).send();
-    }
-    client.close();
-  });
-});
-
-export default router;
+export default profesores;
