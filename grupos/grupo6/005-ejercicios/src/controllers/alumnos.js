@@ -42,6 +42,7 @@ router.get('/:id', function (req, res) {
       });
 
       if (!alumno) throw new Error();
+      console.log("El alumno no existe");
 
       res.send(alumno);
     } catch (e) {
@@ -88,7 +89,6 @@ router.put('/:id', (req, res) => {
 
     const updates = Object.keys(req.body);
     const allowedUpdates = ['nombre', 'edad', 'provincia'];
-
 
     const isValidOperation = updates.every((update) =>
       allowedUpdates.includes(update)
