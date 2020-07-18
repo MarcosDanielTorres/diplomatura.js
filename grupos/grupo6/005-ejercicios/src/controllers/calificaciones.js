@@ -35,6 +35,7 @@ router.get('/:id', function (req, res) {
 
       if(!calificacion)
         throw new Error();
+        console.log('No existe esa calificacion');
 
       client.close();
       res.send(calificacion);
