@@ -18,10 +18,10 @@ div.circulo {
   text-decoration: none;
   outline: none;
   color: #fff;
-  background-color:red;
+  background-color: red;
   border: none;
   border-radius: 50%;
-  
+
   margin: 4px 2px;
 }
 
@@ -37,7 +37,7 @@ div.circulo {
   background-color: #3b2ad3;
   border: none;
   border-radius: 50%;
-  
+
   margin: 4px 2px;
 }
 .buttonAmarillo {
@@ -52,6 +52,18 @@ div.circulo {
   background-color: yellow;
   border: none;
   border-radius: 50%;
-  
+
   margin: 4px 2px;
+}
+
+div.circle {
+  width: 100px;
+  height: 100px;
+  background: yellow;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
 }
