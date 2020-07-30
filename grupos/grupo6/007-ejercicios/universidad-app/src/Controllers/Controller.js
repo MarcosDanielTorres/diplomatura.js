@@ -13,7 +13,7 @@ import MateriaDetalle from "../Components/MateriaDetalle";
 import Calificacion from "../Components/Calificacion";
 import CalificacionDetalle from "../Components/CalificacionDetalle";
 
-const alumnosTesting = (alumnos, AppThis) => {
+const alumnos = (alumnos, AppThis) => {
   let vistaActual = null;
   if (AppThis.state.idDetalleSeleccionado === -1) {
     vistaActual = (
@@ -45,7 +45,7 @@ const alumnosTesting = (alumnos, AppThis) => {
   return vistaActual;
 };
 
-const profesoresTesting = (profesores, AppThis) => {
+const profesores = (profesores, AppThis) => {
   let vistaActual = null;
   if (AppThis.state.idDetalleSeleccionado === -1) {
     vistaActual = (
@@ -76,7 +76,7 @@ const profesoresTesting = (profesores, AppThis) => {
   return vistaActual;
 };
 
-const materiasTesting = (materias, AppThis) => {
+const materias = (materias, AppThis) => {
   let vistaActual = null;
   if (AppThis.state.idDetalleSeleccionado === -1) {
     vistaActual = (
@@ -107,7 +107,7 @@ const materiasTesting = (materias, AppThis) => {
   return vistaActual;
 };
 
-const calificacionesTesting = (calificaciones, AppThis) => {
+const calificaciones = (calificaciones, AppThis) => {
   let vistaActual = null;
   if (AppThis.state.idDetalleSeleccionado === -1) {
     vistaActual = (
@@ -140,10 +140,10 @@ const calificacionesTesting = (calificaciones, AppThis) => {
 };
 
 const controller = {
-  alumnos: alumnosTesting,
-  profesores: profesoresTesting,
-  materias: materiasTesting,
-  calificaciones: calificacionesTesting,
+  alumnos,
+  profesores,
+  materias,
+  calificaciones,
 };
 
 export default controller;

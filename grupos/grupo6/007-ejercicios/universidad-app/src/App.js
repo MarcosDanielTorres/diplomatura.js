@@ -1,8 +1,6 @@
 import React from "react";
 import "./App.css";
 import datos from "./datos";
-import Alumno from "./Components/Alumno.js";
-import AlumnoDetalle from "./Components/AlumnoDetalle.js";
 
 import Controller from "./Controllers/Controller";
 
