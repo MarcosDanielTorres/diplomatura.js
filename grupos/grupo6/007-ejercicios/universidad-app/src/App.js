@@ -4,7 +4,7 @@ import datos from "./datos";
 import Alumno from "./Components/Alumno.js";
 import AlumnoDetalle from "./Components/AlumnoDetalle.js";
 
-import Controller from "./Controllers/TestingController";
+import Controller from "./Controllers/Controller";
 
 class App extends React.Component {
   constructor(props) {
