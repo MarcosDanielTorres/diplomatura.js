@@ -33,7 +33,7 @@ export const materiasAprobadasByNombreAlumno = (nombreAlumno) => {
       alumnoId = basededatos.alumnos[i].id;
       found = true;
     }
-    i++;
+    i=i+1;
   }
 
   if (!found) {
